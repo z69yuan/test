@@ -1,6 +1,10 @@
 package com.beancurd.test
 
+import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -31,6 +35,14 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+
+            // Permission Denial: opening provider com.beancurd.provider.BeancurdProvider from ProcessRecord
+            // java.lang.SecurityException: Permission Denial: opening provider com.beancurd.provider.BeancurdProvider from ProcessRecord{3d4a4d3 17741:com.beancurd.test/u0a317} (pid=17741, uid=10317) that is not exported from UID 10318
+            val uri = contentResolver.insert(Uri.parse("content://com.beancurd.db").apply {
+                grantUriPermission("com.beancurd.db.read",this, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                grantUriPermission("com.beancurd.db.write",this, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            }, ContentValues())
+            Log.e("client","uri is $uri")
         }
     }
 
